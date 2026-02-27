@@ -8,12 +8,12 @@ const awsconfig = {
           domain: "us-east-18so624jzs.auth.us-east-1.amazoncognito.com",
           scopes: ["openid", "email", "profile"],
           redirectSignIn: [
-            "http://localhost:5173",
-            "https://modifai-content-transformer.vercel.app"
+            "http://localhost:5173/",
+            "https://modifai-content-transformer.vercel.app/"
           ],
           redirectSignOut: [
-            "http://localhost:5173",
-            "https://modifai-content-transformer.vercel.app"
+            "http://localhost:5173/",
+            "https://modifai-content-transformer.vercel.app/"
           ],
           responseType: "code"
         }
