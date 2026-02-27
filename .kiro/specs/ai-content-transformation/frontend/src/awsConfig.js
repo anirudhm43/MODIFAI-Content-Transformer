@@ -7,8 +7,8 @@ const awsconfig = {
         oauth: {
           domain: "us-east-18so624jzs.auth.us-east-1.amazoncognito.com",
           scopes: ["openid"],
-          redirectSignIn: "https://modifai-content-transformer.vercel.app/",
-          redirectSignOut: "https://modifai-content-transformer.vercel.app/",
+          redirectSignIn: "https://modifai-content-transformer.vercel.app",
+          redirectSignOut: "https://modifai-content-transformer.vercel.app",
           responseType: "token",
         },
       },
