@@ -68,7 +68,8 @@ const handleSubmit = async () => {
 
     const session = await fetchAuthSession();
     const token = session.tokens.accessToken.toString();
-
+    console.log("Mode:", mode);
+    console.log("Final Prompt:", finalPrompt);
     const response = await fetch(
       "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
       {
@@ -254,7 +255,7 @@ const handleSubmit = async () => {
     Translate
   </button>
 </div>
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#0070D2] to-[#4F46E5] rounded-[2.2rem] blur opacity-0 group-focus-within:opacity-20 transition duration-500"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#0070D2] to-[#4F46E5] rounded-[2.2rem] blur opacity-0 group-focus-within:opacity-20 transition duration-500 pointer-events-none"></div>
             
             {/* Outer Container (Slightly Darker Background) */}
             <div className="relative bg-[#E2E8F0] border border-gray-300 rounded-[2rem] shadow-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#0070D2]/40 focus-within:border-transparent transition-all duration-300">
