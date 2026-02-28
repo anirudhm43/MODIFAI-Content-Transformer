@@ -184,6 +184,16 @@ Ensure your `awsconfig.js` contains:
 
 ---
 
+## 🧭 How to Use MODIFAI
+
+1. Login using Cognito authentication.
+2. Enter content in the input box.
+3. Select a transformation mode (Summarize, Rewrite, Translate).
+4. Click Generate to invoke Amazon Bedrock.
+5. View your transformation history in the History section.
+
+👉 For detailed usage instructions, see [USER_GUIDE.md](./USER_GUIDE.md)
+
 # 🔮 Future Enhancements
 
 * Tone adjustment slider
