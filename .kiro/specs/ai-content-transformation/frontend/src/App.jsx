@@ -19,6 +19,7 @@ function App() {
   const [mode, setMode] = useState(null);
   const [error, setError] = useState(null);
   const [latency, setLatency] = useState(null);
+  const [targetLanguage, setTargetLanguage] = useState("Spanish");
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
@@ -65,9 +66,8 @@ const handleSubmit = async () => {
       } else if (mode === "rewrite") {
       finalPrompt = `Rewrite the following text in a more professional and polished tone:\n\n${prompt}`;
       } else if (mode === "translate") {
-      finalPrompt = `Translate the following text into Spanish:\n\n${prompt}`;
-     
-    }
+  finalPrompt = `Translate the following text into ${targetLanguage}:\n\n${prompt}`;
+}
 
     const session = await fetchAuthSession();
     const token = session.tokens.accessToken.toString();
@@ -75,18 +75,27 @@ const handleSubmit = async () => {
     console.log("Final Prompt:", finalPrompt);
     const startTime = performance.now();
     setError(null);
-    const response = await fetch(
-      "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ prompt: finalPrompt }), // 🔥 use finalPrompt
-      }
-    );
+    // ⏳ Create timeout controller
+const controller = new AbortController();
+const timeout = setTimeout(() => {
+  controller.abort();
+}, 15000); // 15 seconds timeout
 
+const response = await fetch(
+  "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ prompt: finalPrompt }),
+    signal: controller.signal, // 🔥 important
+  }
+);
+
+// clear timeout after success
+clearTimeout(timeout);
     const data = await response.json();
     const endTime = performance.now();
     setLatency(Math.round(endTime - startTime));
@@ -98,7 +107,14 @@ const handleSubmit = async () => {
 
   }catch (err) {
   console.error(err);
-  setError("Something went wrong. Please try again.");
+
+  if (err.name === "AbortError") {
+    setError("Request timed out. Please check your connection.");
+  } else if (!navigator.onLine) {
+    setError("You are offline. Please reconnect to the internet.");
+  } else {
+    setError("Something went wrong. Please try again.");
+  }
 }
 
   finally {
@@ -284,6 +300,24 @@ const handleSubmit = async () => {
   >
     Translate
   </button>
+  {mode === "translate" && (
+    <select
+      value={targetLanguage}
+      onChange={(e) => setTargetLanguage(e.target.value)}
+      className="px-4 py-2 rounded-xl text-sm font-bold transition"
+    >
+      <option value="Spanish">Spanish</option>
+      <option value="French">French</option>
+      <option value="German">German</option>
+      <option value="Hindi">Hindi</option>
+      <option value="Japanese">Japanese</option>
+      <option value="Kannada">Kannada</option>
+      <option value="Telugu">Telugu</option>
+      <option value="Tamil">Tamil</option>
+      <option value="Urdu">Urdu</option>
+      <option value="Tulu">Tulu</option>
+    </select>
+  )}
 </div>
             <div className="absolute -inset-1 bg-gradient-to-r from-[#0070D2] to-[#4F46E5] rounded-[2.2rem] blur opacity-0 group-focus-within:opacity-20 transition duration-500 pointer-events-none"></div>
             
