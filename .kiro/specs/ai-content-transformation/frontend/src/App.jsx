@@ -17,6 +17,8 @@ function App() {
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
   const [mode, setMode] = useState(null);
+  const [error, setError] = useState(null);
+  const [latency, setLatency] = useState(null);
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
@@ -50,6 +52,7 @@ const handleSubmit = async () => {
   if (!prompt.trim()) return;
 
   setLoading(true);
+  setLatency(null);
 
   try {
     // 🔥 Build finalPrompt based on mode
@@ -70,6 +73,8 @@ const handleSubmit = async () => {
     const token = session.tokens.accessToken.toString();
     console.log("Mode:", mode);
     console.log("Final Prompt:", finalPrompt);
+    const startTime = performance.now();
+    setError(null);
     const response = await fetch(
       "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
       {
@@ -83,17 +88,22 @@ const handleSubmit = async () => {
     );
 
     const data = await response.json();
+    const endTime = performance.now();
+    setLatency(Math.round(endTime - startTime));
+
     setOutput(data.output);
     setPrompt("");
     setMode(null);
     fetchHistory();
 
-  } catch (error) {
-    console.error(error);
-    setOutput("⚠ Connection error. Please verify your session.");
-  }
+  }catch (err) {
+  console.error(err);
+  setError("Something went wrong. Please try again.");
+}
 
+  finally {
   setLoading(false);
+}
 };
 
   const fetchHistory = async () => {
@@ -107,7 +117,9 @@ const handleSubmit = async () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (!response.ok) return;
+      if (!response.ok) {
+        throw new Error("API request failed");
+      }
       const data = await response.json();
       setHistory(data);
     } catch (error) {
@@ -132,7 +144,16 @@ const handleSubmit = async () => {
           MODIFAI
           </h2>
           <nav className="space-y-3">
-            <button className="w-full flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-2xl hover:bg-[#0070D2] hover:text-white transition-all duration-300 text-sm font-bold text-[#1E293B] shadow-sm group">
+           <button
+  onClick={() => {
+    setPrompt("");
+    setOutput("");
+    setError(null);
+    setLatency(null);
+    setMode(null);   
+  }}
+  className="w-full flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-2xl hover:bg-[#0070D2] hover:text-white transition-all duration-300 text-sm font-bold text-[#1E293B] shadow-sm group"
+>
               <span className="text-lg group-hover:scale-110 transition-transform">+</span>
               New Chat
             </button>
@@ -215,8 +236,17 @@ const handleSubmit = async () => {
               </div>
             </div>
           )}
+          {latency && (
+  <div className="mt-2 text-xs text-gray-500">
+    Response time: {latency} ms
+  </div>
+)}
+{error && (
+  <p className="text-red-500 mt-2 text-sm">{error}</p>
+)}
         </div>
-       
+        
+      
 
         {/* Input Bar Area */}
         <div className="p-10 bg-transparent">
@@ -287,13 +317,13 @@ const handleSubmit = async () => {
                   }`}
                 >
                   {loading ? (
-  <div className="flex items-center gap-2">
-    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-    Generating...
-  </div>
-) : (
-  "Generate"
-)}
+                <div className="flex items-center gap-2">
+               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Generating...
+              </div>
+              ) : (
+               "Generate"
+                )}
                 </button>
               </div>
             </div>

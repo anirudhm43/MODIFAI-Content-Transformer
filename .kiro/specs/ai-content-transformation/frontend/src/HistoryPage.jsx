@@ -50,26 +50,43 @@ function HistoryPage() {
           <p className="text-gray-500">No history found.</p>
         )}
 
-        <div className="space-y-6">
-          {history.map((item, index) => (
-            <div
-              key={index}
-              className="p-6 bg-white rounded-2xl shadow-lg"
-            >
-              <p className="font-semibold text-[#0070D2]">Prompt:</p>
-              <p className="text-gray-700 mb-4">
-                {item.prompt?.S}
-              </p>
+        <div className="space-y-4">
+  {history.map((item, index) => (
+    <div
+      key={index}
+      className="p-5 bg-white rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition duration-300"
+    >
+      {/* Top Meta Row */}
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-xs font-semibold text-indigo-500 uppercase tracking-wider">
+          {item.mode?.S || "Standard"}
+        </span>
 
-              <p className="font-semibold text-purple-600">
-                Response:
-              </p>
-              <p className="text-gray-700">
-                {item.response?.S}
-              </p>
-            </div>
-          ))}
-        </div>
+        {item.latencyMs?.N && (
+          <span className="text-xs text-gray-400">
+            {item.latencyMs.N} ms
+          </span>
+        )}
+      </div>
+
+      {/* Prompt */}
+      <p className="text-sm font-semibold text-gray-500 mb-1">
+        Prompt
+      </p>
+      <p className="text-gray-800 mb-4 line-clamp-2">
+        {item.prompt?.S}
+      </p>
+
+      {/* Response */}
+      <p className="text-sm font-semibold text-gray-500 mb-1">
+        Response
+      </p>
+      <p className="text-gray-700 line-clamp-3">
+        {item.response?.S}
+      </p>
+    </div>
+  ))}
+</div>
       </div>
     </div>
   );
