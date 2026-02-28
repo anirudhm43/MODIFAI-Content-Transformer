@@ -16,6 +16,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
+  const [mode, setMode] = useState(null);
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
@@ -45,36 +46,54 @@ function App() {
     setOutput("");
     setHistory([]);
   };
+const handleSubmit = async () => {
+  if (!prompt.trim()) return;
 
-  const handleSubmit = async () => {
-    if (!prompt.trim()) return;
-    setLoading(true);
-    try {
-      const session = await fetchAuthSession();
-      const token = session.tokens.accessToken.toString();
+  setLoading(true);
 
-      const response = await fetch(
-        "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ prompt }),
-        }
-      );
+  try {
+    // 🔥 Build finalPrompt based on mode
+    
 
-      const data = await response.json();
-      setOutput(data.output);
-      setPrompt("");
-      fetchHistory();
-    } catch (error) {
-      console.error(error);
-      setOutput("⚠ Connection error. Please verify your session.");
+    let finalPrompt = prompt;
+
+      if (mode === "summarize") {
+       finalPrompt = `Summarize the following text clearly and concisely:\n\n${prompt}`;
+      } else if (mode === "rewrite") {
+      finalPrompt = `Rewrite the following text in a more professional and polished tone:\n\n${prompt}`;
+      } else if (mode === "translate") {
+      finalPrompt = `Translate the following text into Spanish:\n\n${prompt}`;
+     
     }
-    setLoading(false);
-  };
+
+    const session = await fetchAuthSession();
+    const token = session.tokens.accessToken.toString();
+
+    const response = await fetch(
+      "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ prompt: finalPrompt }), // 🔥 use finalPrompt
+      }
+    );
+
+    const data = await response.json();
+    setOutput(data.output);
+    setPrompt("");
+    setMode(null);
+    fetchHistory();
+
+  } catch (error) {
+    console.error(error);
+    setOutput("⚠ Connection error. Please verify your session.");
+  }
+
+  setLoading(false);
+};
 
   const fetchHistory = async () => {
     try {
@@ -196,10 +215,45 @@ function App() {
             </div>
           )}
         </div>
+       
 
         {/* Input Bar Area */}
         <div className="p-10 bg-transparent">
           <div className="max-w-3xl mx-auto relative group">
+<div className="flex gap-3 mb-4">
+  <button
+    onClick={() => setMode("summarize")}
+    className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
+      mode === "summarize"
+        ? "bg-[#0070D2] text-white"
+        : "bg-gray-200 text-gray-700"
+    }`}
+  >
+    Summarize
+  </button>
+
+  <button
+    onClick={() => setMode("rewrite")}
+    className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
+      mode === "rewrite"
+        ? "bg-[#0070D2] text-white"
+        : "bg-gray-200 text-gray-700"
+    }`}
+  >
+    Rewrite
+  </button>
+
+  <button
+    onClick={() => setMode("translate")}
+    className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
+      mode === "translate"
+        ? "bg-[#0070D2] text-white"
+        : "bg-gray-200 text-gray-700"
+    }`}
+  >
+    Translate
+  </button>
+</div>
             <div className="absolute -inset-1 bg-gradient-to-r from-[#0070D2] to-[#4F46E5] rounded-[2.2rem] blur opacity-0 group-focus-within:opacity-20 transition duration-500"></div>
             
             {/* Outer Container (Slightly Darker Background) */}
