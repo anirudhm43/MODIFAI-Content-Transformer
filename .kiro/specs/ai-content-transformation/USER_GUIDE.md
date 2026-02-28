@@ -36,9 +36,9 @@ Make sure the content is complete before generating.
 
 Choose one of the available structured AI modes:
 
-* ✂️ **Summarize** – Condenses long content into a concise version.
-* ✍️ **Rewrite** – Rewrites content in a more professional and polished tone.
-* 🌍 **Translate** – Translates content into Spanish.
+* ✂️ **Content Summarization** – Condenses long content into a concise and summarized version.
+* ✍️ **Professional Rewrite** – Rewrites content in a more professional and polished tone.
+* 🌍 **Language Localization** – Translates content into selected languages.
 
 Each mode dynamically modifies the AI prompt template before invoking Amazon Bedrock.
 
