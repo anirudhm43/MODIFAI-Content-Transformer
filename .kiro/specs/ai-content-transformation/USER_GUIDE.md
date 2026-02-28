@@ -9,7 +9,7 @@ MODIFAI is a secure AI-powered content transformation platform with user authent
 1. Open the live application URL.
 2. Click **Login**.
 3. You will be redirected to the Amazon Cognito hosted login page.
-4. Enter your registered email and password.
+4. Enter your registered email and password. If you don’t have an account, please create one
 5. After successful authentication, you will be redirected back to the MODIFAI dashboard.
 
 🔒 All transformations are securely tied to your authenticated user account.
