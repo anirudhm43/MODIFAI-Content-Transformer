@@ -113,7 +113,6 @@ This prototype currently includes:
 
 # 🚧 Prototype Limitations
 
-* Translation currently supports Spanish only.
 * No custom tone configuration.
 * No file upload support.
 * No role-based access control.
