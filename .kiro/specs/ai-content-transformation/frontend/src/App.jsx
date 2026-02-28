@@ -204,7 +204,7 @@ clearTimeout(timeout);
         <header className="h-20 flex items-center justify-between px-10 z-10">
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-xs font-black text-[#475569] uppercase tracking-widest">Acoustic Logic Engine v2</span>
+            <span className="text-xs font-black text-[#475569] uppercase tracking-widest">AI Content Transformation Engine</span>
           </div>
           {!user && (
             <button 
@@ -219,18 +219,23 @@ clearTimeout(timeout);
         {/* Chat Thread */}
         <div className="flex-1 overflow-y-auto p-6 md:p-12 space-y-10 scroll-smooth">
           {!output && !loading && (
-            <div className="max-w-2xl mx-auto mt-24">
+            <div className="max-w-2xl mx-auto mt-24 ">
               <h1 className="text-5xl font-black text-[#0074EB] mb-6 tracking-tighter leading-tight animate-in fade-in slide-in-from-bottom-8 duration-700">
                 Unlock your <br/>creative potential.
               </h1>
               <p className="text-[#334155] text-xl font-bold max-w-md border-l-4 border-[#0070D2] pl-6">
                 Ready to transform your ideas? Start by typing a prompt below.
               </p>
+              
+    <p className="text-sm text-gray-600 font-medium  max-w-md border-l-4 border-[#0070D2] pl-6">
+      Transform content intelligently. Powered by AWS Generative AI.
+    </p>
+
             </div>
           )}
 
           {(output || loading) && (
-            <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-500">
+            <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-500">
               <div className="bg-white border-2 border-gray-100 p-10 rounded-[2.5rem] shadow-2xl shadow-blue-900/10 max-h-[60vh] overflow-y-auto scrollbar-hide">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
@@ -266,8 +271,8 @@ clearTimeout(timeout);
 
         {/* Input Bar Area */}
         <div className="p-10 bg-transparent">
-          <div className="max-w-3xl mx-auto relative group">
-<div className="flex gap-3 mb-4">
+          <div className="max-w-5xl mx-auto relative group">
+<div className="flex gap-3 mb-4 pl-6">
   <button
     onClick={() => setMode("summarize")}
     className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
@@ -276,7 +281,7 @@ clearTimeout(timeout);
         : "bg-gray-200 text-gray-700"
     }`}
   >
-    Summarize
+   Content Summarization
   </button>
 
   <button
@@ -287,7 +292,7 @@ clearTimeout(timeout);
         : "bg-gray-200 text-gray-700"
     }`}
   >
-    Rewrite
+    Professional Rewrite
   </button>
 
   <button
@@ -298,7 +303,7 @@ clearTimeout(timeout);
         : "bg-gray-200 text-gray-700"
     }`}
   >
-    Translate
+    Language Localization
   </button>
   {mode === "translate" && (
     <select
@@ -318,7 +323,13 @@ clearTimeout(timeout);
       <option value="Tulu">Tulu</option>
     </select>
   )}
+  <br />
+  <p className="text-xs text-gray-500 mt-2">
+  Select a transformation workflow powered by Amazon Bedrock.
+</p>
+  
 </div>
+
             <div className="absolute -inset-1 bg-gradient-to-r from-[#0070D2] to-[#4F46E5] rounded-[2.2rem] blur opacity-0 group-focus-within:opacity-20 transition duration-500 pointer-events-none"></div>
             
             {/* Outer Container (Slightly Darker Background) */}
@@ -368,6 +379,10 @@ clearTimeout(timeout);
             )}
           </div>
         </div>
+        <div className="absolute bottom-4 right-6 text-xs text-gray-500 font-medium">
+  Powered by Amazon Bedrock + AWS Serverless
+</div>
+
       </main>
     </div>
   );
