@@ -5,6 +5,13 @@ import { useNavigate } from "react-router-dom";
 function HistoryPage() {
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
+  const modeLabels = {
+  summarize: "Content Summarization",
+  rewrite: "Professional Rewrite",
+  translate: "Language Localization",
+  platform: "Platform Optimization",
+  chat: "Chat"
+};
 
   useEffect(() => {
     fetchHistory();
@@ -59,7 +66,7 @@ function HistoryPage() {
       {/* Top Meta Row */}
       <div className="flex justify-between items-center mb-3">
         <span className="text-xs font-semibold text-indigo-500 uppercase tracking-wider">
-          {item.mode?.S || "Standard"}
+          {modeLabels[item.mode?.S] || "Chat"}
         </span>
 
         {item.latencyMs?.N && (
@@ -68,22 +75,38 @@ function HistoryPage() {
           </span>
         )}
       </div>
+      {/* NEW FEATURE — Transformation Metadata */}
+<div className="mb-3 space-y-1">
+  <p className="text-xs text-gray-500">
+    Mode: {item.mode?.S || "N/A"}
+  </p>
 
-      {/* Prompt */}
-      <p className="text-sm font-semibold text-gray-500 mb-1">
-        Prompt
-      </p>
-      <p className="text-gray-800 mb-4 line-clamp-2">
-        {item.prompt?.S}
-      </p>
+  <p className="text-xs text-gray-500">
+    Platform: {item.platform?.S || "N/A"}
+  </p>
 
-      {/* Response */}
-      <p className="text-sm font-semibold text-gray-500 mb-1">
-        Response
-      </p>
-      <p className="text-gray-700 line-clamp-3">
-        {item.response?.S}
-      </p>
+  <p className="text-xs text-gray-500">
+    Tone: {item.tone?.S || "N/A"}
+  </p>
+</div>
+
+{/* Prompt */}
+<p className="text-sm font-semibold text-gray-500 mb-1">
+  Prompt
+</p>
+<p className="text-gray-800 mb-4 line-clamp-2">
+  {item.prompt?.S}
+</p>
+
+{/* Response */}
+<p className="text-sm font-semibold text-gray-500 mb-1">
+  Response
+</p>
+<p className="text-gray-700 line-clamp-3">
+  {item.response?.S}
+</p>
+
+     
     </div>
   ))}
 </div>

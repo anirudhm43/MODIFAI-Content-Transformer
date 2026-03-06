@@ -17,9 +17,25 @@ function App() {
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
   const [mode, setMode] = useState(null);
+  const [platform, setPlatform] = useState("");
+  const [lastPrompt, setLastPrompt] = useState("");
+  const [tone, setTone] = useState("professional");
   const [error, setError] = useState(null);
   const [latency, setLatency] = useState(null);
   const [targetLanguage, setTargetLanguage] = useState("Spanish");
+  const [responseMode, setResponseMode] = useState(null);
+  const [responsePlatform, setResponsePlatform] = useState(null);
+  const [responseTone, setResponseTone] = useState(null);
+  const [responseLanguage, setResponseLanguage] = useState(null);
+  const modeLabels = {
+  summarize: "Content Summarization",
+  rewrite: "Professional Rewrite",
+  translate: "Language Localization",
+  platform: "Platform Optimization",
+  chat: "Chat"
+  };
+
+  console.log("Mpde:",mode)
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
@@ -56,72 +72,72 @@ const handleSubmit = async () => {
   setLatency(null);
 
   try {
-    // 🔥 Build finalPrompt based on mode
-    
-
-    let finalPrompt = prompt;
-
-      if (mode === "summarize") {
-       finalPrompt = `Summarize the following text clearly and concisely:\n\n${prompt}`;
-      } else if (mode === "rewrite") {
-      finalPrompt = `Rewrite the following text in a more professional and polished tone:\n\n${prompt}`;
-      } else if (mode === "translate") {
-  finalPrompt = `Translate the following text into ${targetLanguage}:\n\n${prompt}`;
-}
-
     const session = await fetchAuthSession();
     const token = session.tokens.accessToken.toString();
+
     console.log("Mode:", mode);
-    console.log("Final Prompt:", finalPrompt);
+
     const startTime = performance.now();
     setError(null);
-    // ⏳ Create timeout controller
-const controller = new AbortController();
-const timeout = setTimeout(() => {
-  controller.abort();
-}, 15000); // 15 seconds timeout
 
-const response = await fetch(
-  "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ prompt: finalPrompt }),
-    signal: controller.signal, // 🔥 important
-  }
-);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    const activeMode = mode || "chat";
 
-// clear timeout after success
-clearTimeout(timeout);
+    const response = await fetch(
+      "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        
+        body: JSON.stringify({
+          prompt,
+          mode: activeMode,
+          platform,
+          tone,
+          targetLanguage
+        }),
+        signal: controller.signal,
+      }
+    );
+
+    clearTimeout(timeout);
+
     const data = await response.json();
     const endTime = performance.now();
     setLatency(Math.round(endTime - startTime));
 
     setOutput(data.output);
+    setLastPrompt(prompt);
     setPrompt("");
-    setMode(null);
+    setPlatform("");
+    setTone("professional");
+    setResponseMode(activeMode);
+    setResponsePlatform(platform);
+    setResponseTone(tone);
+    setResponseLanguage(targetLanguage);
+
     fetchHistory();
+    
 
-  }catch (err) {
-  console.error(err);
+  } catch (err) {
+    console.error(err);
 
-  if (err.name === "AbortError") {
-    setError("Request timed out. Please check your connection.");
-  } else if (!navigator.onLine) {
-    setError("You are offline. Please reconnect to the internet.");
-  } else {
-    setError("Something went wrong. Please try again.");
+    if (err.name === "AbortError") {
+      setError("Request timed out. Please check your connection.");
+    } else if (!navigator.onLine) {
+      setError("You are offline. Please reconnect to the internet.");
+    } else {
+      setError("Something went wrong. Please try again.");
+    }
+
+  } finally {
+    setLoading(false);
   }
-}
-
-  finally {
-  setLoading(false);
-}
 };
-
   const fetchHistory = async () => {
     try {
       const session = await fetchAuthSession();
@@ -204,7 +220,7 @@ clearTimeout(timeout);
         <header className="h-20 flex items-center justify-between px-10 z-10">
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-xs font-black text-[#475569] uppercase tracking-widest">AI Content Transformation Engine</span>
+            <span className="text-xs font-black text-[#475569] uppercase tracking-widest">Multi-Platform AI Content Optimization Engine</span>
           </div>
           {!user && (
             <button 
@@ -224,11 +240,11 @@ clearTimeout(timeout);
                 Unlock your <br/>creative potential.
               </h1>
               <p className="text-[#334155] text-xl font-bold max-w-md border-l-4 border-[#0070D2] pl-6">
-                Ready to transform your ideas? Start by typing a prompt below.
+                Ready to transform your content? Start by typing a prompt below.
               </p>
               
     <p className="text-sm text-gray-600 font-medium  max-w-md border-l-4 border-[#0070D2] pl-6">
-      Transform content intelligently. Powered by AWS Generative AI.
+      Optimize scontent intelligently. Powered by AWS Generative AI.
     </p>
 
             </div>
@@ -236,6 +252,17 @@ clearTimeout(timeout);
 
           {(output || loading) && (
             <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-500">
+              {/* USER PROMPT */}
+    {lastPrompt && (
+  <div className="flex justify-end">
+    <div className="bg-blue-50 border border-blue-200 p-6 rounded-2xl max-w-[75%]">
+      
+      <p className="text-[#1E293B] font-bold ">
+        {lastPrompt}
+      </p>
+    </div>
+  </div>
+)}
               <div className="bg-white border-2 border-gray-100 p-10 rounded-[2.5rem] shadow-2xl shadow-blue-900/10 max-h-[60vh] overflow-y-auto scrollbar-hide">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
@@ -258,8 +285,41 @@ clearTimeout(timeout);
             </div>
           )}
           {latency && (
-  <div className="mt-2 text-xs text-gray-500">
-    Response time: {latency} ms
+  <div className="mt-3 text-xs text-gray-600 space-y-1">
+    
+    {responseMode && (
+      <p>
+  <span className="font-semibold">Mode:</span>{" "}
+  {modeLabels[responseMode] || "Chat"}
+</p>
+    )}
+
+    {responseMode === "platform" && responsePlatform && (
+      <p>
+        <span className="font-semibold">Platform:</span>{" "}
+        {responsePlatform}
+      </p>
+    )}
+
+    {responseMode === "platform" && responseTone && (
+      <p>
+        <span className="font-semibold">Tone:</span>{" "}
+        {responseTone}
+      </p>
+    )}
+
+    {responseMode === "translate" && responseLanguage && (
+      <p>
+        <span className="font-semibold">Language:</span>{" "}
+        {responseLanguage}
+      </p>
+    )}
+    
+
+    <p>
+      <span className="font-semibold">Response Time:</span> {latency} ms
+    </p>
+
   </div>
 )}
 {error && (
@@ -274,7 +334,7 @@ clearTimeout(timeout);
           <div className="max-w-5xl mx-auto relative group">
 <div className="flex gap-3 mb-4 pl-6">
   <button
-    onClick={() => setMode("summarize")}
+    onClick={() => setMode(mode === "summarize" ? null : "summarize")}
     className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
       mode === "summarize"
         ? "bg-[#0070D2] text-white"
@@ -285,7 +345,7 @@ clearTimeout(timeout);
   </button>
 
   <button
-    onClick={() => setMode("rewrite")}
+    onClick={() => setMode(mode === "rewrite" ? null : "rewrite")}
     className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
       mode === "rewrite"
         ? "bg-[#0070D2] text-white"
@@ -296,7 +356,7 @@ clearTimeout(timeout);
   </button>
 
   <button
-    onClick={() => setMode("translate")}
+    onClick={() => setMode(mode === "translate" ? null : "translate")}
     className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
       mode === "translate"
         ? "bg-[#0070D2] text-white"
@@ -323,19 +383,56 @@ clearTimeout(timeout);
       <option value="Tulu">Tulu</option>
     </select>
   )}
+  <button
+  onClick={() => setMode(mode === "platform" ? null : "platform")}
+  className={`px-4 py-2 rounded-xl text-sm font-bold transition ${
+    mode === "platform"
+      ? "bg-[#0070D2] text-white"
+      : "bg-gray-200 text-gray-700"
+  }`}
+>
+  Platform Optimization
+</button>
+{mode === "platform" && (
+  <select
+    value={platform}
+    onChange={(e) => setPlatform(e.target.value)}
+    className="px-4 py-2 rounded-xl text-sm font-bold transition"
+  >
+    <option value="">Select Platform</option>
+    <option value="instagram">Instagram</option>
+    <option value="linkedin">LinkedIn</option>
+    <option value="twitter">Twitter</option>
+    <option value="blog">Blog</option>
+    <option value="email">Email</option>
+  </select>
+)}
+{mode === "platform" && (
+  <select
+    value={tone}
+    onChange={(e) => setTone(e.target.value)}
+    className="px-4 py-2 rounded-xl text-sm font-bold transition"
+  >
+    <option value="professional">Professional</option>
+    <option value="casual">Casual</option>
+    <option value="trendy">Trendy</option>
+  </select>
+)}
   <br />
   <p className="text-xs text-gray-500 mt-2">
   Select a transformation workflow powered by Amazon Bedrock.
 </p>
   
 </div>
-
+                   {/* Active Mode Indicator */}
+                  <p className="text-xs font-semibold text-green-700 bg-green-100 inline-block px-3 py-1 rounded-full ml-6 mt-2">
+  Active Mode: {modeLabels[mode] || "Chat"}
+</p> 
             <div className="absolute -inset-1 bg-gradient-to-r from-[#0070D2] to-[#4F46E5] rounded-[2.2rem] blur opacity-0 group-focus-within:opacity-20 transition duration-500 pointer-events-none"></div>
             
             {/* Outer Container (Slightly Darker Background) */}
             <div className="relative bg-[#E2E8F0] border border-gray-300 rounded-[2rem] shadow-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#0070D2]/40 focus-within:border-transparent transition-all duration-300">
-              
-              {/* Textarea (Keep Background Light/White for readability) */}
+                {/* Textarea (Keep Background Light/White for readability) */}
               <textarea
                 rows="3"
                 placeholder="How can I assist you today?"
@@ -367,7 +464,7 @@ clearTimeout(timeout);
                 Generating...
               </div>
               ) : (
-               "Generate"
+               "Generate Optimized Content"
                 )}
                 </button>
               </div>
