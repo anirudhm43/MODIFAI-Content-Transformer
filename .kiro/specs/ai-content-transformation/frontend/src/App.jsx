@@ -82,7 +82,9 @@ const handleSubmit = async () => {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
-    const activeMode = mode || "chat";
+    const 
+    
+    Mode = mode || "chat";
 
     const response = await fetch(
       "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
@@ -229,6 +231,7 @@ const handleSubmit = async () => {
             >
               Sign In
             </button>
+            
           )}
         </header>
 
@@ -422,16 +425,14 @@ const handleSubmit = async () => {
   <p className="text-xs text-gray-500 mt-2">
   Select a transformation workflow powered by Amazon Bedrock.
 </p>
-  
+ 
 </div>
-                   {/* Active Mode Indicator */}
-                  <p className="text-xs font-semibold text-green-700 bg-green-100 inline-block px-3 py-1 rounded-full ml-6 mt-2">
-  Active Mode: {modeLabels[mode] || "Chat"}
-</p> 
+                   
             <div className="absolute -inset-1 bg-gradient-to-r from-[#0070D2] to-[#4F46E5] rounded-[2.2rem] blur opacity-0 group-focus-within:opacity-20 transition duration-500 pointer-events-none"></div>
-            
+           
             {/* Outer Container (Slightly Darker Background) */}
             <div className="relative bg-[#E2E8F0] border border-gray-300 rounded-[2rem] shadow-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#0070D2]/40 focus-within:border-transparent transition-all duration-300">
+            
                 {/* Textarea (Keep Background Light/White for readability) */}
               <textarea
                 rows="3"
@@ -442,12 +443,24 @@ const handleSubmit = async () => {
               />
               
               {/* Bottom Control Strip */}
-              <div className="flex items-center justify-between p-4 bg-[#CBD5E1]/50 border-t border-gray-300">
-                <div className="flex gap-2">
-                  <button className="w-9 h-9 rounded-full bg-white border border-gray-300 flex items-center justify-center text-[#475569] hover:text-[#0070D2] hover:border-[#0070D2] transition-colors shadow-sm">
-                    <span className="text-sm font-bold">📎</span>
-                  </button>
-                </div>
+             <div className="flex items-center justify-between p-4 bg-[#CBD5E1]/50 border-t border-gray-300">
+
+  {/* LEFT SIDE (Attach + Active Mode) */}
+  <div className="flex items-center gap-3">
+    
+    <button
+  onClick={() => alert("📎 File attachment feature coming soon!")}
+  className="w-9 h-9 rounded-full bg-white border border-gray-300 flex items-center justify-center text-[#475569] hover:text-[#0070D2] hover:border-[#0070D2] transition-colors shadow-sm"
+>
+      <span className="text-sm font-bold">📎</span>
+    </button>
+
+    <p className="text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full">
+      Active Mode: {modeLabels[mode] || "Chat"}
+    </p>
+
+  </div>
+
                 
                 <button
                   onClick={handleSubmit}
