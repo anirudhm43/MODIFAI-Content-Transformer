@@ -20,7 +20,7 @@ export const handler = async (event) => {
   try {
 
     // ===========================
-    // ✅ GET → Fetch History
+    // GET → Fetch History
     // ===========================
     if (method === "GET") {
 
@@ -31,7 +31,7 @@ export const handler = async (event) => {
           ExpressionAttributeValues: {
             ":u": { S: userId }
           },
-          ScanIndexForward: false // newest first
+          ScanIndexForward: false
         })
       );
 
@@ -42,7 +42,7 @@ export const handler = async (event) => {
     }
 
     // ===========================
-    // ✅ POST → Generate AI
+    // POST → Generate AI
     // ===========================
     if (method === "POST") {
 
@@ -59,20 +59,112 @@ export const handler = async (event) => {
       const modelId = "amazon.nova-lite-v1:0";
 
       const requestBody = JSON.parse(event.body);
-      const prompt = requestBody.prompt;
 
-      if (!prompt) {
+      const inputText = requestBody.prompt;
+      const mode = requestBody.mode || "rewrite";
+      const platform = requestBody.platform || "";
+      const tone = requestBody.tone || "professional";
+
+      if (!inputText) {
         return {
           statusCode: 400,
           body: JSON.stringify({ error: "Prompt is required" })
         };
       }
 
+      // ===========================
+      // Prompt Builder
+      // ===========================
+
+      let finalPrompt = "";
+
+      if (mode === "summarize") {
+        finalPrompt = `
+Summarize the following content into a concise version while preserving the key message.
+
+Content:
+${inputText}
+`;
+      }
+
+      else if (mode === "rewrite") {
+        finalPrompt = `
+Rewrite the following content in a professional and polished tone while preserving the meaning.
+
+Content:
+${inputText}
+`;
+      }
+
+      else if (mode === "translate") {
+        finalPrompt = `
+Translate the following content into Spanish while preserving meaning and tone.
+
+Content:
+${inputText}
+`;
+      }
+
+      else if (mode === "platform") {
+
+        let platformInstruction = "";
+
+        if (platform === "instagram") {
+          platformInstruction = "Create a short engaging Instagram caption with emojis and relevant hashtags.";
+        }
+
+        if (platform === "linkedin") {
+          platformInstruction = "Write a professional LinkedIn post with clear insights and structured language.";
+        }
+
+        if (platform === "twitter") {
+          platformInstruction = "Write a concise Twitter post under 280 characters that is engaging and impactful.";
+        }
+
+        if (platform === "blog") {
+          platformInstruction = "Expand this into a short informative blog-style paragraph.";
+        }
+
+        if (platform === "email") {
+          platformInstruction = "Rewrite this as a professional email with greeting and closing.";
+        }
+
+        finalPrompt = `
+Optimize the following content for ${platform}.
+
+Tone: ${tone}
+
+Platform Style:
+${platformInstruction}
+
+Content:
+${inputText}
+`;
+      }
+
+      else {
+
+        // DEFAULT CHAT MODE
+        finalPrompt = `
+      You are a helpful and friendly AI assistant.
+      
+      Respond naturally like a conversation.
+      
+      User: ${inputText}
+      Assistant:
+      `;
+      
+      }
+
+      // ===========================
+      // Bedrock Request
+      // ===========================
+
       const bedrockPayload = JSON.stringify({
         messages: [
           {
             role: "user",
-            content: [{ text: prompt }]
+            content: [{ text: finalPrompt }]
           }
         ],
         inferenceConfig: {
@@ -100,7 +192,10 @@ export const handler = async (event) => {
 
       const latencyMs = Date.now() - startTime;
 
-      // Save SUCCESS
+      // ===========================
+      // Save to DynamoDB
+      // ===========================
+
       await dynamoClient.send(
         new PutItemCommand({
           TableName: "MODIFAI-Transformations",
@@ -109,7 +204,10 @@ export const handler = async (event) => {
             createdAt: { S: createdAt },
             requestId: { S: requestId },
             modelId: { S: modelId },
-            prompt: { S: prompt },
+            mode: { S: mode },
+            platform: { S: platform },
+            tone: { S: tone },
+            prompt: { S: inputText },
             response: { S: aiOutput },
             latencyMs: { N: latencyMs.toString() },
             status: { S: "SUCCESS" }
@@ -127,9 +225,6 @@ export const handler = async (event) => {
       };
     }
 
-    // ===========================
-    // ❌ Method Not Allowed
-    // ===========================
     return {
       statusCode: 405,
       body: JSON.stringify({ error: "Method not allowed" })
