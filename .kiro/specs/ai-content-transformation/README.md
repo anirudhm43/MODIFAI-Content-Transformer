@@ -2,6 +2,11 @@
 
 > AI-powered platform for transforming and optimizing content across multiple digital platforms using Amazon Bedrock.
 
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![AWS](https://img.shields.io/badge/Backend-AWS-orange)
+![Bedrock](https://img.shields.io/badge/AI-Amazon%20Bedrock-purple)
+![License](https://img.shields.io/badge/License-Hackathon-green)
+
 MODIFAI is a secure, AWS-powered Multi-Platform AI Content Optimization Engine built for the AI for Bharat Hackathon.
 
 It enables authenticated users to intelligently optimize, transform, and adapt content for multiple digital platforms using structured AI workflows powered by Amazon Bedrock.
@@ -10,7 +15,7 @@ It enables authenticated users to intelligently optimize, transform, and adapt c
 
 ## 🌐 Live Demo
 
-👉 [https://modifai-content-transformer.vercel.app](https://modifai-content-transformer.vercel.app)
+👉 [https://main.d9htv620j2niu.amplifyapp.com/](https://main.d9htv620j2niu.amplifyapp.com/)
 
 ## 💻 GitHub Repository
 
@@ -40,19 +45,23 @@ All AI interactions are securely authenticated and logged per user.
 
 ```
 User
-   ↓
-React Frontend (Vercel)
-   ↓
-Amazon API Gateway (JWT Authorizer)
-   ↓
+↓
+AWS Amplify (Frontend)
+↓
+Amazon Cognito (Authentication)
+↓
+Amazon API Gateway
+↓
 AWS Lambda
-   ↓
-Amazon Bedrock (Nova Foundation Model)
-   ↓
+↓
+Amazon Bedrock
+↓
 Amazon DynamoDB
 ```
----
 
+👉 For system architecture see [System Architecture](System Architecture.png)
+
+---
 ## 🔐 Security Design
 
 MODIFAI follows a secure-by-design architecture:
@@ -71,8 +80,8 @@ MODIFAI follows a secure-by-design architecture:
 
 * React.js (Vite)
 * Tailwind CSS
-* AWS Amplify Authentication
-* Vercel Deployment
+* AWS Cognito Authentication
+* AWS Amplify Deployment
 
 ### ⚙ Backend (AWS Serverless)
 
@@ -195,7 +204,7 @@ This ensures:
 
 ```bash
 git clone https://github.com/anirudhm43/MODIFAI-Content-Transformer.git
-cd frontend
+cd .kiro/specs/ai-content-transformation/frontend
 
 ```
 
@@ -253,7 +262,7 @@ Ensure your awsconfig.js contains:
 * View AI-generated results.
 * Access previous interactions in History.
 
-👉 For detailed instructions see USER_GUIDE.md
+👉 For detailed instructions see [USER_GUIDE.md](USER_GUIDE.md)
 
 ---
 
