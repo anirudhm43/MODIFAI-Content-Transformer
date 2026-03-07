@@ -246,7 +246,7 @@ const handleSubmit = async () => {
               </p>
               
     <p className="text-sm text-gray-600 font-medium  max-w-md border-l-4 border-[#0070D2] pl-6">
-      Optimize scontent intelligently. Powered by AWS Generative AI.
+      Optimize content intelligently. Powered by AWS Generative AI.
     </p>
 
             </div>
