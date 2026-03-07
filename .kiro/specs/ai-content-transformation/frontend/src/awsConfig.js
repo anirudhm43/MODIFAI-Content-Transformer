@@ -10,12 +10,12 @@ const awsconfig = {
           redirectSignIn: [
             "http://localhost:5173/",
             "https://modifai-content-transformer.vercel.app/",
-            "https://main.d9htv620j2niu.amplifyapp.com/"
+            "https://main.d9htv620j2niu.amplifyapp.com"
           ],
           redirectSignOut: [
             "http://localhost:5173/",
             "https://modifai-content-transformer.vercel.app/",
-            "https://main.d9htv620j2niu.amplifyapp.com/"
+            "https://main.d9htv620j2niu.amplifyapp.com"
           ],
           responseType: "code"
         }
