@@ -9,11 +9,13 @@ const awsconfig = {
           scopes: ["openid", "email", "profile"],
           redirectSignIn: [
             "http://localhost:5173/",
-            "https://modifai-content-transformer.vercel.app/"
+            "https://modifai-content-transformer.vercel.app/",
+            "https://main.d9htv620j2niu.amplifyapp.com/"
           ],
           redirectSignOut: [
             "http://localhost:5173/",
-            "https://modifai-content-transformer.vercel.app/"
+            "https://modifai-content-transformer.vercel.app/",
+            "https://main.d9htv620j2niu.amplifyapp.com/"
           ],
           responseType: "code"
         }
