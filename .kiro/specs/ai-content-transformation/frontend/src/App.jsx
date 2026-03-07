@@ -35,7 +35,7 @@ function App() {
   chat: "Chat"
   };
 
-  console.log("Mpde:",mode)
+  console.log("Mode:",mode)
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
@@ -82,9 +82,8 @@ const handleSubmit = async () => {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
-    const 
-    
-    Mode = mode || "chat";
+    const activeMode =
+    mode === "platform" && !platform ? "chat" : mode || "chat";
 
     const response = await fetch(
       "https://zkci3v1k8h.execute-api.us-east-1.amazonaws.com/prod/transform",
