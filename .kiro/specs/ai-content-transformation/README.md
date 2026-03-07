@@ -59,7 +59,7 @@ Amazon Bedrock
 Amazon DynamoDB
 ```
 
-👉 For system architecture see [System Architecture](System Architecture.jpeg)
+👉 For system architecture see ![Architecture Diagram](Architecture.jpeg)
 
 ---
 ## 🔐 Security Design
