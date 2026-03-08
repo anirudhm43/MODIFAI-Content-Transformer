@@ -13,9 +13,13 @@ It enables authenticated users to intelligently optimize, transform, and adapt c
 
 ---
 
-## 🌐 Live Demo
+## 🌐 Live Prototype
 
 👉 [https://main.d9htv620j2niu.amplifyapp.com/](https://main.d9htv620j2niu.amplifyapp.com/)
+
+## 💻 Demo Video
+
+👉 [https://drive.google.com/file/d/1t0pMUOAF7MmApSgPfktwOLsWRM2ofHvS/view?usp=sharing](https://drive.google.com/file/d/1t0pMUOAF7MmApSgPfktwOLsWRM2ofHvS/view?usp=sharing)
 
 ## 💻 GitHub Repository
 

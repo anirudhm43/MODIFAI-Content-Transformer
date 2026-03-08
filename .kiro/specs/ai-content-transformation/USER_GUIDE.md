@@ -1,123 +1,209 @@
 # 🧭 How to Use MODIFAI (Prototype Guide)
 
-MODIFAI is a secure AI-powered content transformation platform with user authentication and transformation history.
+MODIFAI is a secure **AI-powered multi-platform content optimization platform** with user authentication and interaction history.
+
+It allows users to transform and optimize content for **different platforms, tones, and languages** using **Amazon Bedrock foundation models**.
 
 ---
 
 # 🔐 1. Sign In
 
-1. Open the live application URL.
-2. Click **Login**.
-3. You will be redirected to the Amazon Cognito hosted login page.
-4. Enter your registered email and password. If you don’t have an account, please create one
-5. After successful authentication, you will be redirected back to the MODIFAI dashboard.
+1. Open the MODIFAI live application.
+2. Click **Sign In**.
+3. You will be redirected to the **Amazon Cognito hosted login page**.
+4. Enter your registered email and password.
+5. If you do not have an account, create one using the **Sign Up** option.
+6. After successful authentication, you will be redirected back to the MODIFAI dashboard.
 
-🔒 All transformations are securely tied to your authenticated user account.
+🔒 All AI interactions are securely associated with your authenticated user account.
 
 ---
 
-# ✍️ 2. Enter Content to Transform
+# ✍️ 2. Enter Content
 
-1. In the dashboard, locate the **Input Text Area**.
-2. Type or paste the content you want to transform.
+1. Locate the **Input Text Area** in the dashboard.
+2. Type or paste the content you want to optimize.
 
-### Examples:
+### Example Content Types
 
-* Blog paragraph
-* Email draft
-* LinkedIn post
-* Technical explanation
+* Blog paragraphs
+* LinkedIn posts
+* Email drafts
+* Technical explanations
+* Social media captions
 
 Make sure the content is complete before generating.
 
 ---
 
-# 🎛 3. Select Transformation Mode
+# 🎛 3. Select Optimization Mode
 
-Choose one of the available structured AI modes:
+Choose one of the structured AI workflows available.
 
-* ✂️ **Content Summarization** – Condenses long content into a concise and summarized version.
-* ✍️ **Professional Rewrite** – Rewrites content in a more professional and polished tone.
-* 🌍 **Language Localization** – Translates content into selected languages.
+### ✂️ Content Summarization
 
-Each mode dynamically modifies the AI prompt template before invoking Amazon Bedrock.
+Condenses long content into a concise and readable summary.
+
+### ✍️ Professional Rewrite
+
+Rewrites the content with improved clarity, grammar, and professional tone.
+
+### 🌍 Language Localization
+
+Translates content into another language while preserving meaning and context.
+
+### 📱 Platform Optimization
+
+Adapts the content for specific digital platforms.
+
+Supported platforms include:
+
+* LinkedIn
+* Instagram
+* Twitter
+* Blog
+* Email
+
+Platform optimization also allows tone customization.
 
 ---
 
-# 🚀 4. Generate AI Output
+# 🎯 4. Choose Tone (Platform Mode Only)
 
-1. Click the **Generate** button.
+When using **Platform Optimization**, you can choose a tone:
+
+* Professional
+* Casual
+* Trendy
+
+This helps tailor the generated content for the intended audience.
+
+---
+
+# 🚀 5. Generate Optimized Content
+
+Click **Generate Optimized Content**.
 
 The system will:
 
-* Send your request to API Gateway
-* Invoke AWS Lambda
-* Call Amazon Bedrock
+1. Send your request to **Amazon API Gateway**
+2. Authenticate the request using **JWT tokens**
+3. Invoke **AWS Lambda**
+4. Generate optimized content using **Amazon Bedrock**
+5. Return the AI response to the UI
 
-The transformed output will appear in the output panel.
+The optimized result will appear in the **Response Panel**.
 
 You will also see:
 
-* ⏱ Response latency (in milliseconds)
+* ⏱ **Response Time (Latency)** in milliseconds
+* ⚙ **Mode used**
+* 📱 Platform (if applicable)
+* 🎯 Tone (if applicable)
 
 ---
 
-# 🕘 5. View Transformation History
+# 🕘 6. View Interaction History
 
-1. Click **View History** in the sidebar.
+Click **View History** in the sidebar.
 
-You will see a list of:
+The history page shows:
 
-* Selected mode
+* AI mode used
+* Platform selected
+* Tone configuration
 * Original prompt
-* AI response
-* Latency
-* Timestamp
+* AI generated response
+* Response latency
+* Request timestamp
 
-All history is securely stored per user in Amazon DynamoDB.
+All history is securely stored in **Amazon DynamoDB** per user.
 
 ---
 
-# 🔄 6. Start a New Transformation
+# 🔄 7. Start a New Request
 
 To reset the workspace:
 
 1. Click **New Chat**
-2. Enter a new prompt
-3. Select a mode
-4. Generate again
+2. Enter new content
+3. Select an optimization mode
+4. Click **Generate Optimized Content**
 
 ---
 
-# ⚠ Notes
+# ⚠ Important Notes
 
 * Internet connection is required.
-* Very long inputs may take slightly longer to process.
-* If your session expires, log in again.
-* JWT authentication protects all backend endpoints.
+* Large inputs may take longer to process.
+* If authentication expires, sign in again.
+* All backend endpoints are protected by **JWT authorization**.
 
 ---
 
 # 🧪 Prototype Capabilities
 
-This prototype currently includes:
+The current prototype includes:
 
-* Secure authentication via Amazon Cognito
-* JWT-based API protection
-* Multi-mode AI content transformation
-* Real-time latency tracking
-* User-specific DynamoDB logging
-* Live production deployment
+* Secure authentication via **Amazon Cognito**
+* **JWT-protected APIs**
+* Multi-platform AI content optimization
+* Tone customization
+* Language localization
+* Real-time latency measurement
+* User-specific history logging in **DynamoDB**
+* Serverless architecture powered by **AWS Lambda**
+* Production deployment
 
 ---
 
 # 🚧 Prototype Limitations
 
-* No custom tone configuration.
-* No file upload support.
-* No role-based access control.
-* Limited to text-based input only.
+This is an early prototype. Current limitations include:
+
+* File attachments are not yet supported
+* No role-based access control
+* No analytics dashboard
+* Limited platform presets
+* Text input only
 
 ---
 
+# 🔮 Planned Enhancements
+
+Future improvements may include:
+
+* 📎 File upload support
+* 🎨 Advanced tone customization
+* 🌍 Dynamic language selection
+* 📊 User analytics dashboard
+* 📄 Export results to PDF
+* ⚡ Streaming AI responses
+* 🧠 Custom prompt templates
+
+---
+
+# 📌 Prototype Purpose
+
+This prototype demonstrates:
+
+* Secure AI application architecture
+* Serverless cloud integration
+* Structured prompt engineering
+* Multi-platform AI content generation
+* Production-ready AWS deployment
+
+---
+
+# 🏁 Conclusion
+
+MODIFAI showcases how modern **AI + serverless architecture** can be used to build a scalable content optimization platform.
+
+By combining **Amazon Bedrock, Lambda, DynamoDB, and Cognito**, MODIFAI enables secure, intelligent, and platform-aware content generation.
+
+---
+
+✅ This guide now **fully matches your updated product**.
+
+---
 
